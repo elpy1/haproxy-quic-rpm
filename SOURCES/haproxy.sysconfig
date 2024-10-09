@@ -1,0 +1,4 @@
+# Override systemd haproxy.service Environment variables used in ExecStart.
+# Run "systemctl show -p Environment haproxy" to get default values.
+# Run "systemctl show -p ExecStart haproxy" to see how variables are used
+# in ExecStart command.
