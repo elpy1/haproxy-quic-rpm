@@ -1,6 +1,10 @@
 # haproxy-quic-rpm
 Build RPM for haproxy with HTTP/3 support. Built and tested on Rocky Linux 9.
 
+| Package name | Supported distributions | Includes |
+| --- | --- | --- |
+| haproxy-quic | el9 | AWS-LC (static) |
+
 ## Usage
 
 ### Build

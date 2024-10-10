@@ -7,7 +7,7 @@
 %global _hardened_build 1
 %global debug_package   %{nil}
  
-Name:           haproxy
+Name:           haproxy-quic
 Version:        %{haproxy_version}
 Release:        1%{?dist}
 Summary:        HAProxy reverse proxy for high availability environments
@@ -16,11 +16,11 @@ License:        GPLv2+
  
 URL:            http://www.haproxy.org
 Source0:        haproxy-%{version}.tar.gz
-Source1:        %{name}.service
-Source2:        %{name}.cfg
-Source3:        %{name}.logrotate
-Source4:        %{name}.sysconfig
-Source5:        %{name}.sysusers
+Source1:        haproxy.service
+Source2:        haproxy.cfg
+Source3:        haproxy.logrotate
+Source4:        haproxy.sysconfig
+Source5:        haproxy.sysusers
 Source6:        halog.1
  
 Source100:      aws-lc-%{aws_lc_version}.tar.gz
@@ -62,9 +62,9 @@ availability environments. Indeed, it can:
  
 %prep
 # HAPROXY
-%setup -q
+%setup -q -n haproxy-%{version}
 # AWS LC
-%setup -q -T -D -a 100
+%setup -q -T -D -a 100 -n haproxy-%{version}
  
 %build
 # AWS LC
@@ -87,11 +87,11 @@ popd
 %{__make} install-bin DESTDIR=%{buildroot} PREFIX=%{_prefix} TARGET="linux2628"
 %{__make} install-man DESTDIR=%{buildroot} PREFIX=%{_prefix}
  
-%{__install} -p -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/%{name}.service
-%{__install} -p -D -m 0644 %{SOURCE2} %{buildroot}%{haproxy_confdir}/%{name}.cfg
-%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/%{name}
-%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/%{name}
-%{__install} -p -D -m 0644 %{SOURCE5} %{buildroot}%{_sysusersdir}/%{name}.conf
+%{__install} -p -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/haproxy.service
+%{__install} -p -D -m 0644 %{SOURCE2} %{buildroot}%{haproxy_confdir}/haproxy.cfg
+%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/haproxy
+%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/haproxy
+%{__install} -p -D -m 0644 %{SOURCE5} %{buildroot}%{_sysusersdir}/haproxy.conf
 %{__install} -p -D -m 0644 %{SOURCE6} %{buildroot}%{_mandir}/man1/halog.1
 %{__install} -d -m 0755 %{buildroot}%{haproxy_homedir}
 %{__install} -d -m 0755 %{buildroot}%{haproxy_datadir}
@@ -121,13 +121,13 @@ done
 %sysusers_create_compat %{SOURCE5}
  
 %post
-%systemd_post %{name}.service
+%systemd_post haproxy.service
  
 %preun
-%systemd_preun %{name}.service
+%systemd_preun haproxy.service
  
 %postun
-%systemd_postun_with_restart %{name}.service
+%systemd_postun_with_restart haproxy.service
  
 %files
 %doc doc/* examples/*
@@ -138,13 +138,13 @@ done
 %dir %{haproxy_confdir}/conf.d
 %dir %{haproxy_datadir}
 %{haproxy_datadir}/*
-%config(noreplace) %{haproxy_confdir}/%{name}.cfg
-%config(noreplace) %{_sysconfdir}/logrotate.d/%{name}
-%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
-%{_unitdir}/%{name}.service
-%{_sbindir}/%{name}
+%config(noreplace) %{haproxy_confdir}/haproxy.cfg
+%config(noreplace) %{_sysconfdir}/logrotate.d/haproxy
+%config(noreplace) %{_sysconfdir}/sysconfig/haproxy
+%{_unitdir}/haproxy.service
+%{_sbindir}/haproxy
 %{_bindir}/halog
 %{_bindir}/iprange
 %{_bindir}/ip6range
 %{_mandir}/man1/*
-%{_sysusersdir}/%{name}.conf
+%{_sysusersdir}/haproxy.conf
