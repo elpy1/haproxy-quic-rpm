@@ -1,8 +1,9 @@
 SHELL := /bin/bash
 CWD := $(realpath $(shell dirname $(firstword $(MAKEFILE_LIST))))
 
-AWS_LC_VERSION = 1.36.1
-HAPROXY_VERSION = 3.0.5
+AWS_LC_VERSION ?= 1.36.1
+HAPROXY_VERSION ?= 3.0.5
+
 SOURCES_DIR = $(CWD)/SOURCES
 APP_NAME = el9builder
 WORK_DIR = /home/builder/rpmbuild
