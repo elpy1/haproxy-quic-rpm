@@ -43,3 +43,5 @@ Commands:
   help             Display this help
 ```
 
+### Manual build
+The RPM build above relies on system packages for `lua` and `pcre2`. If you need to source these manually or want a specific version for your build, you can use the `manual_build.sh` script in the `scripts` directory.
