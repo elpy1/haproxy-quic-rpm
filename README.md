@@ -53,3 +53,70 @@ Commands:
 
 ### Manual build
 The RPM build above relies on system packages for `lua` and `pcre2`. If you need to source these manually or want a specific version for your build, you can use the `manual_build.sh` script in the `scripts` directory.
+
+## Post-build
+After building, you should have the RPM and SRPM files saved locally in you repo:
+```
+$ tree {,S}RPMS
+RPMS
+└── x86_64
+    └── haproxy-quic-3.0.5-1.el9.x86_64.rpm
+SRPMS
+└── haproxy-quic-3.0.5-1.el9.src.rpm
+```
+### Installation
+To install on a RHEL9 machine, use `dnf` to install the package:
+```
+dnf install /path/to/haproxy-quic-3.0.5-1.el9.x86_64.rpm
+```
+Verify `haproxy` installation (use `-vv` to display build information):
+```
+$ haproxy -v
+HAProxy version 3.0.5-8e879a5 2024/09/19 - https://haproxy.org/
+Status: long-term supported branch - will stop receiving fixes around Q2 2029.
+Known bugs: http://www.haproxy.org/bugs/bugs-3.0.5.html
+Running on: Linux 5.14.0-427.37.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Sep 25 11:51:41 UTC 2024 x86_64
+```
+To enable and start the systemd service:
+```
+systemctl start --now haproxy
+```
+To check the service status:
+```
+systemctl status haproxy
+```
+To confirm you can access haproxy stats locally:
+```
+curl localhost:9000/stats
+```
+
+### Configuring haproxy
+To enable HTTP/3, update `/etc/haproxy/haproxy.cfg`:
+```
+frontend default-https
+    bind :443 ssl crt /path/to/certs/mycerts.pem alpn h2,http/1.1 allow-0rtt
+    bind quic4@:443 ssl crt /path/to/certs/mycerts.pem alpn h3 allow-0rtt
+
+    # HTTP/3 (QUIC)
+    http-after-response add-header alt-svc 'h3=":443"; ma=86400'
+
+    # HSTS(HTTP Strict Transport Security)
+    #http-response set-header Strict-Transport-Security max-age=63072000
+
+    # Backend
+    default_backend default-http
+
+backend default-http
+    # Balancer type
+    balance     roundrobin
+
+    # Backend servers
+    server  app1 127.0.0.1:5001 check
+    server  app2 127.0.0.1:5002 check
+```
+**NOTE**: Remember to update your firewall to allow UDP traffic on port 443!!
+
+To have haproxy reload its configuration:
+```
+systemctl reload haproxy
+```
