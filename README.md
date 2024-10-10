@@ -1,19 +1,19 @@
 # haproxy-quic-rpm
-Build RPM for haproxy with HTTP/3 support. Built and tested on Rocky Linux 9.
+Build RPM for haproxy 3.0 with HTTP/3 support. Built and tested on Rocky Linux 9.
 
 | Package name | Supported distributions | Includes |
 | --- | --- | --- |
-| haproxy-quic | el9 | AWS-LC (static) |
+| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 1.36.1 |
+
 
 ## Usage
-
 ### Build
 First, build the docker image that we'll use for building the RPM:
 ```
 make docker-build
 ```
 
-Build the RPM inside the docker container:
+Build the RPM inside the docker container (to specify a different version of `haproxy` or `AWS-LC`, update the Makefile first):
 ```
 make rpm-build
 ```
