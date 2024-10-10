@@ -15,7 +15,7 @@ docker-build: ## Build the docker container (required for building the RPM)
 docker-build-nc: ## Build the container without caching
 	docker build --no-cache -t $(APP_NAME) .
 
-docker-run: ## Run the docker container (useful for testing)
+docker-run: ## Run the docker container (useful for manual testing)
 	docker run --rm -i -t \
 		--tmpfs /tmp:rw,exec \
 		--mount type=bind,src="$(CWD)",dst="$(WORK_DIR)" \
@@ -43,7 +43,7 @@ clean-rpm: ## Clean all previously built RPMs and SRPMs
 	rm -rf RPMS SRPMS
 
 clean-sources: ## Clean all previously downloaded RPM source files
-	rm -rf SOURCES/{aws-lc,haproxy,lua,pcre2}*.tar.gz
+	rm -rf SOURCES/{aws-lc,haproxy,lua,pcre2}*\.*gz
 
 clean-all: clean-rpm clean-sources ## Clean all the things
 
