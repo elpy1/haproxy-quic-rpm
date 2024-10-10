@@ -44,7 +44,8 @@ clean-rpm: ## Clean all previously built RPMs and SRPMs
 	rm -rf RPMS SRPMS
 
 clean-sources: ## Clean all previously downloaded RPM source files
-	rm -rf SOURCES/{aws-lc,haproxy,lua,pcre2}*\.*gz
+	rm -f SOURCES/{aws-lc,haproxy,lua,pcre2}-*.tar.gz
+	rm -f SOURCES/{aws-lc,haproxy,lua,pcre2}-*.tgz
 
 clean-all: clean-rpm clean-sources ## Clean all the things
 
