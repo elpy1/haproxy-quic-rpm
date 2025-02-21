@@ -72,7 +72,7 @@ dnf install /path/to/haproxy-quic-3.0.8-1.el9.x86_64.rpm
 Verify `haproxy` installation (use `-vv` to display build information):
 ```
 $ haproxy -v
-HAProxy version 3.0.8-8e879a5 2024/09/19 - https://haproxy.org/
+HAProxy version 3.0.8-6036c31 2025/01/29 - https://haproxy.org/
 Status: long-term supported branch - will stop receiving fixes around Q2 2029.
 Known bugs: http://www.haproxy.org/bugs/bugs-3.0.8.html
 Running on: Linux 5.14.0-427.37.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Sep 25 11:51:41 UTC 2024 x86_64
