@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 CWD := $(realpath $(shell dirname $(firstword $(MAKEFILE_LIST))))
 
-AWS_LC_VERSION ?= 1.45.0
+AWS_LC_VERSION ?= 1.46.1
 HAPROXY_VERSION ?= 3.0.8
 
 SOURCES_DIR = $(CWD)/SOURCES
