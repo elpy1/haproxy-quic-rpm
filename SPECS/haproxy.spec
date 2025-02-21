@@ -63,6 +63,10 @@ availability environments. Indeed, it can:
 %prep
 # HAPROXY
 %setup -q -n haproxy-%{version}
+# README renamed in 3.1.x
+if [ -f README.md ]; then
+    mv README.md README
+fi
 # AWS LC
 %setup -q -T -D -a 100 -n haproxy-%{version}
  
