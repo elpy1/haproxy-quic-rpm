@@ -1,9 +1,9 @@
 # haproxy-quic-rpm
-Build RPM for haproxy 3.0 with HTTP/3 support. Built and tested on Rocky Linux 9.
+Build RPM for haproxy 3.2 with HTTP/3 support. Built, tested and actively running on Rocky Linux 9.
 
 | Package name | Supported distributions | Includes |
 | --- | --- | --- |
-| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 1.51.2 |
+| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 1.52.1 |
 
 
 ## Prerequisites
@@ -23,7 +23,7 @@ make rpm-build
 ```
 or, if you wish to specify a different version of `haproxy` or `AWS-LC`:
 ```bash
-make rpm-build HAPROXY_VERSION=3.1.7 AWS_LC_VERSION=1.51.2
+make rpm-build HAPROXY_VERSION=3.2.0 AWS_LC_VERSION=1.52.1
 ```
 
 Clean up and remove all artifacts from the build:
@@ -60,21 +60,21 @@ After building, you should have the RPM and SRPM files saved locally in you repo
 $ tree {,S}RPMS
 RPMS
 └── x86_64
-    └── haproxy-quic-3.1.7-1.el9.x86_64.rpm
+    └── haproxy-quic-3.2.0-1.el9.x86_64.rpm
 SRPMS
-└── haproxy-quic-3.1.7-1.el9.src.rpm
+└── haproxy-quic-3.2.0-1.el9.src.rpm
 ```
 ### Installation
 To install on a RHEL9 machine, use `dnf` to install the package:
 ```
-dnf install /path/to/haproxy-quic-3.1.7-1.el9.x86_64.rpm
+dnf install /path/to/haproxy-quic-3.2.0-1.el9.x86_64.rpm
 ```
 Verify `haproxy` installation (use `-vv` to display build information):
 ```
 $ haproxy -v
-HAProxy version 3.1.7-c3f4089 2025/04/17 - https://haproxy.org/
-Status: stable branch - will stop receiving fixes around Q1 2026.
-Known bugs: http://www.haproxy.org/bugs/bugs-3.1.7.html
+HAProxy version 3.2.0-e134140 2025/05/28 - https://haproxy.org/
+Status: long-term supported branch - will stop receiving fixes around Q2 2030.
+Known bugs: http://www.haproxy.org/bugs/bugs-3.2.0.html
 Running on: Linux 5.14.0-427.37.1.el9_4.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Sep 25 11:51:41 UTC 2024 x86_64
 ```
 To enable and start the systemd service:
@@ -116,7 +116,7 @@ backend default-http
 ```
 **NOTE**: Remember to update your firewall to allow UDP traffic on port 443!!
 
-To have haproxy reload its configuration:
+To reload haproxy configuration:
 ```
 systemctl reload haproxy
 ```
