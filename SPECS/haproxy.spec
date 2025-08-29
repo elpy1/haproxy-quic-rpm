@@ -45,6 +45,11 @@ BuildRequires:  zlib-devel
 
 Requires(pre):  shadow-utils
 %{?systemd_requires}
+
+# Package replacement directives
+Provides:       haproxy = %{version}-%{release}
+Conflicts:      haproxy
+Obsoletes:      haproxy < %{version}
  
 %description
 HAProxy is a TCP/HTTP reverse proxy which is particularly suited for high
