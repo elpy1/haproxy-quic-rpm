@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 CWD := $(realpath $(shell dirname $(firstword $(MAKEFILE_LIST))))
 
-AWS_LC_VERSION ?= 1.64.0
-HAPROXY_VERSION ?= 3.2.8
+AWS_LC_VERSION ?= 1.66.0
+HAPROXY_VERSION ?= 3.2.9
 
 SOURCES_DIR = $(CWD)/SOURCES
 APP_NAME = el9builder
