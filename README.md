@@ -3,7 +3,7 @@ Build RPM for haproxy 3.2 (LTS) with HTTP/3 support. Built, tested and actively 
 
 | Package name | Supported distributions | Includes |
 | --- | --- | --- |
-| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 1.67.0 |
+| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 1.68.0 |
 
 
 ## Prerequisites
@@ -23,7 +23,7 @@ make rpm-build
 ```
 or, if you wish to specify a different version of `haproxy` or `AWS-LC`:
 ```bash
-make rpm-build HAPROXY_VERSION=3.2.11 AWS_LC_VERSION=1.67.0
+make rpm-build HAPROXY_VERSION=3.2.13 AWS_LC_VERSION=1.68.0
 ```
 
 Clean up and remove all artifacts from the build:
@@ -60,21 +60,21 @@ After building, you should have the RPM and SRPM files saved locally in you repo
 $ tree {,S}RPMS
 RPMS
 └── x86_64
-    └── haproxy-quic-3.2.11-1.el9.x86_64.rpm
+    └── haproxy-quic-3.2.13-1.el9.x86_64.rpm
 SRPMS
-└── haproxy-quic-3.2.11-1.el9.src.rpm
+└── haproxy-quic-3.2.13-1.el9.src.rpm
 ```
 ### Installation
 To install on a RHEL9 machine, use `dnf` to install the package:
 ```
-dnf install /path/to/haproxy-quic-3.2.11-1.el9.x86_64.rpm
+dnf install /path/to/haproxy-quic-3.2.13-1.el9.x86_64.rpm
 ```
 Verify `haproxy` installation (use `-vv` to display build information):
 ```
 $ haproxy -v
-HAProxy version 3.2.11-dc3f9355c 2026/01/29 - https://haproxy.org/
+HAProxy version 3.2.13-8bd310ca4 2026/02/19 - https://haproxy.org/
 Status: long-term supported branch - will stop receiving fixes around Q2 2030.
-Known bugs: http://www.haproxy.org/bugs/bugs-3.2.11.html
+Known bugs: http://www.haproxy.org/bugs/bugs-3.2.13.html
 Running on: Linux 5.14.0-611.16.1.el9_7.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Dec 22 12:21:56 UTC 2025 x86_64
 ```
 To enable and start the systemd service:
