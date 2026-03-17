@@ -3,7 +3,7 @@ Build RPM for haproxy 3.2 (LTS) with HTTP/3 support. Built, tested and actively 
 
 | Package name | Supported distributions | Includes |
 | --- | --- | --- |
-| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 1.69.0 |
+| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 1.70.0 |
 
 
 ## Prerequisites
@@ -23,7 +23,7 @@ make rpm-build
 ```
 or, if you wish to specify a different version of `haproxy` or `AWS-LC`:
 ```bash
-make rpm-build HAPROXY_VERSION=3.2.14 AWS_LC_VERSION=1.69.0
+make rpm-build HAPROXY_VERSION=3.2.14 AWS_LC_VERSION=1.70.0
 ```
 
 Clean up and remove all artifacts from the build:
