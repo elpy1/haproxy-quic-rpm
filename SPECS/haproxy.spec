@@ -40,6 +40,7 @@ BuildRequires:  libasan
 # HAPROXY
 BuildRequires:  make
 BuildRequires:  gcc
+BuildRequires:  gcc-c++
 BuildRequires:  systemd
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  lua-devel
