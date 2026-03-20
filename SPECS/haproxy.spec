@@ -15,7 +15,9 @@ Version:        %{haproxy_version}
 Release:        %{packaging_release}.aws_lc.%{aws_lc_version}%{?dist}
 Summary:        HAProxy with HTTP/3 (QUIC) support via AWS-LC
  
-License:        GPLv2+
+# The bundled AWS-LC sources include Apache-2.0, ISC, MIT, BSD-3-Clause,
+# and CC0-1.0 licensed code paths that are compiled into the shipped binary.
+License:        GPL-2.0-or-later AND Apache-2.0 AND ISC AND MIT AND BSD-3-Clause AND CC0-1.0
  
 URL:            http://www.haproxy.org
 Source0:        haproxy-%{version}.tar.gz
@@ -103,6 +105,9 @@ popd
 %{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/haproxy
 %{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysusersdir}/haproxy.conf
 %{__install} -p -D -m 0644 %{SOURCE5} %{buildroot}%{_mandir}/man1/halog.1
+%{__install} -d -m 0755 %{buildroot}%{_licensedir}/%{name}
+%{__install} -p -m 0644 ./aws-lc-%{aws_lc_version}/LICENSE %{buildroot}%{_licensedir}/%{name}/AWS-LC-LICENSE
+%{__install} -p -m 0644 ./aws-lc-%{aws_lc_version}/NOTICE %{buildroot}%{_licensedir}/%{name}/AWS-LC-NOTICE
 %{__install} -d -m 0755 %{buildroot}%{haproxy_homedir}
 %{__install} -d -m 0755 %{buildroot}%{haproxy_datadir}
 %{__install} -d -m 0755 %{buildroot}%{haproxy_confdir}/conf.d
@@ -143,6 +148,8 @@ done
 %doc doc/* examples/*
 %doc CHANGELOG README VERSION
 %license LICENSE
+%license %{_licensedir}/%{name}/AWS-LC-LICENSE
+%license %{_licensedir}/%{name}/AWS-LC-NOTICE
 %dir %{haproxy_homedir}
 %dir %{haproxy_confdir}
 %dir %{haproxy_confdir}/conf.d
