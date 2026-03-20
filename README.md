@@ -21,11 +21,11 @@ To build the RPM inside the docker container:
 ```bash
 make rpm-build
 ```
-or, if you wish to specify a different version of `haproxy` or `AWS-LC`:
+or, if you wish to specify a different version of `haproxy` or `AWS-LC` (use `make check-latest` to compare the pinned haproxy/AWS-LC versions with upstream latest releases):
 ```bash
 make rpm-build HAPROXY_VERSION=3.2.15 AWS_LC_VERSION=1.71.0
 ```
-If you need to rebuild the same `haproxy` version for a new AWS-LC bundle or a packaging-only change, increment `PACKAGE_RELEASE`:
+If you need to rebuild the same `haproxy` version for a new `AWS-LC` bundle or a packaging-only change, increment `PACKAGE_RELEASE`:
 ```bash
 make rpm-build HAPROXY_VERSION=3.2.15 AWS_LC_VERSION=1.71.0 PACKAGE_RELEASE=2
 ```
@@ -56,7 +56,7 @@ The resulting artifacts will be written to `release-artifacts/`.
 ### Help
 Run `make help` for more information:
 ```bash
-$ make
+$ make help
 
 Usage: make <command>
 
@@ -65,6 +65,7 @@ Commands:
   docker-build-nc  Build the container without caching
   docker-run       Run the docker container (useful for manual testing)
   fetch-sources    Fetch sources required for the RPM build
+  check-latest     Compare pinned haproxy/AWS-LC versions with upstream latest releases
   rpm-build        Build the RPM inside docker container
   rpm-build-local  Build the RPM locally
   release-bundle   Build RPM/SRPM assets and assemble a GitHub Release bundle
@@ -77,7 +78,7 @@ Commands:
 ```
 
 ### Manual build
-The RPM build above relies on system packages for `lua` and `pcre2`. If you need to source these manually or want a specific version for your build, you can use the `manual_build.sh` script in the `scripts` directory.
+The RPM build above relies on system packages for `lua` and `pcre2`. If you need to source these manually or want specific versions for a local build, you can use `scripts/manual_build.sh`. By default it picks up the repo's current haproxy and AWS-LC versions from `Makefile`. Be sure to check the build flags and edit as needed. 
 
 ## Post-build
 After building, you should have the RPM and SRPM files saved locally in you repo:
@@ -162,7 +163,6 @@ Release workflow details are documented in `RELEASING.md`.
 ```
 
 Examples:
-
 - `haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9`
 - `haproxy-quic-3.2.15-2.aws_lc.1.72.0.el9`
 - `haproxy-quic-3.2.15-3.aws_lc.1.72.0.el9`

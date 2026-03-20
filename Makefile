@@ -32,6 +32,9 @@ docker-run: ## Run the docker container (useful for manual testing)
 fetch-sources: ## Fetch sources required for the RPM build
 	scripts/fetch_sources.sh
 
+check-latest: ## Compare pinned haproxy/AWS-LC versions with upstream latest releases
+	scripts/check_latest.sh
+
 rpm-build: ## Build the RPM inside docker container
 	docker run --rm -i \
         --tmpfs /tmp:rw,exec \
@@ -80,4 +83,4 @@ help:  ## Display this help
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage: make <command>\n\nCommands:\033[36m\033[0m\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 .DEFAULT_GOAL := help
-.PHONY: docker-build docker-build-nc docker-run fetch-sources rpm-build rpm-build-local release-bundle clean-rpm clean-sources clean-release clean-all print-release-env help
+.PHONY: docker-build docker-build-nc docker-run fetch-sources check-latest rpm-build rpm-build-local release-bundle clean-rpm clean-sources clean-release clean-all print-release-env help
