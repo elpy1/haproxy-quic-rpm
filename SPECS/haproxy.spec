@@ -128,7 +128,7 @@ do
 done
  
 %pre
-%sysusers_create_compat %{SOURCE5}
+%sysusers_create_compat %{SOURCE4}
  
 %post
 %systemd_post haproxy.service
