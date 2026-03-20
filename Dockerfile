@@ -8,7 +8,13 @@ RUN set -x && \
     echo '* - nproc 4096' >> /etc/security/limits.d/90-nproc.conf && \
     dnf clean all
 
-RUN useradd builder -u 1000 -m -G users,wheel && \
+ARG BUILDER_UID=1000
+ARG BUILDER_GID=1000
+
+RUN if ! getent group "${BUILDER_GID}" >/dev/null; then \
+        groupadd -g "${BUILDER_GID}" builder; \
+    fi && \
+    useradd builder -u "${BUILDER_UID}" -g "${BUILDER_GID}" -m -G users,wheel && \
     echo "builder ALL=(ALL:ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 USER builder

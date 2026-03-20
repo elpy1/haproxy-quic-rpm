@@ -1,5 +1,7 @@
 SHELL := /bin/bash
 CWD := $(realpath $(shell dirname $(firstword $(MAKEFILE_LIST))))
+HOST_UID ?= $(shell id -u)
+HOST_GID ?= $(shell id -g)
 
 PACKAGE_RELEASE ?= 1
 PACKAGE_NAME ?= haproxy-quic
@@ -18,10 +20,16 @@ WORK_DIR = /home/builder/rpmbuild
 export PACKAGE_RELEASE AWS_LC_VERSION HAPROXY_VERSION SOURCES_DIR
 
 docker-build: ## Build the docker container (required for building the RPM)
-	docker build -t $(APP_NAME) .
+	docker build \
+		--build-arg BUILDER_UID="$(HOST_UID)" \
+		--build-arg BUILDER_GID="$(HOST_GID)" \
+		-t $(APP_NAME) .
 
 docker-build-nc: ## Build the container without caching
-	docker build --no-cache -t $(APP_NAME) .
+	docker build --no-cache \
+		--build-arg BUILDER_UID="$(HOST_UID)" \
+		--build-arg BUILDER_GID="$(HOST_GID)" \
+		-t $(APP_NAME) .
 
 docker-run: ## Run the docker container (useful for manual testing)
 	docker run --rm -i -t \
