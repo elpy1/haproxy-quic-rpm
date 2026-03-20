@@ -25,6 +25,10 @@ or, if you wish to specify a different version of `haproxy` or `AWS-LC`:
 ```bash
 make rpm-build HAPROXY_VERSION=3.2.15 AWS_LC_VERSION=1.71.0
 ```
+If you need to rebuild the same `haproxy` version for a new AWS-LC bundle or a packaging-only change, increment `PACKAGE_RELEASE`:
+```bash
+make rpm-build HAPROXY_VERSION=3.2.15 AWS_LC_VERSION=1.71.0 PACKAGE_RELEASE=2
+```
 
 Clean up and remove all artifacts from the build:
 ```bash
@@ -81,14 +85,14 @@ After building, you should have the RPM and SRPM files saved locally in you repo
 $ tree {,S}RPMS
 RPMS
 └── x86_64
-    └── haproxy-quic-3.2.15-1.el9.x86_64.rpm
+    └── haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9.x86_64.rpm
 SRPMS
-└── haproxy-quic-3.2.15-1.el9.src.rpm
+└── haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9.src.rpm
 ```
 ### Installation
 To install on a RHEL9 machine, use `dnf` to install the package from a local build or downloaded GitHub Release asset:
 ```
-dnf install /path/to/haproxy-quic-3.2.15-1.el9.x86_64.rpm
+dnf install /path/to/haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9.x86_64.rpm
 ```
 Verify `haproxy` installation (use `-vv` to display build information):
 ```
@@ -143,3 +147,18 @@ systemctl reload haproxy
 ```
 
 Release workflow details are documented in `RELEASING.md`.
+
+## Versioning
+`Version` follows HAProxy. `Release` carries the packaging iteration plus the bundled AWS-LC version:
+
+```text
+<package_release>.aws_lc.<aws_lc_version>%{?dist}
+```
+
+Examples:
+
+- `haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9`
+- `haproxy-quic-3.2.15-2.aws_lc.1.72.0.el9`
+- `haproxy-quic-3.2.15-3.aws_lc.1.72.0.el9`
+
+While `HAPROXY_VERSION` stays the same, the leading `PACKAGE_RELEASE` value must keep increasing.

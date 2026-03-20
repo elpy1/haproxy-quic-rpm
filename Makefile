@@ -1,6 +1,7 @@
 SHELL := /bin/bash
 CWD := $(realpath $(shell dirname $(firstword $(MAKEFILE_LIST))))
 
+PACKAGE_RELEASE ?= 1
 PACKAGE_NAME ?= haproxy-quic
 SUPPORTED_DISTRO ?= el9
 SUPPORTED_ARCH ?= x86_64
@@ -14,7 +15,7 @@ SOURCES_DIR = $(CWD)/SOURCES
 APP_NAME = el9builder
 WORK_DIR = /home/builder/rpmbuild
 
-export AWS_LC_VERSION HAPROXY_VERSION SOURCES_DIR
+export PACKAGE_RELEASE AWS_LC_VERSION HAPROXY_VERSION SOURCES_DIR
 
 docker-build: ## Build the docker container (required for building the RPM)
 	docker build -t $(APP_NAME) .
@@ -35,13 +36,17 @@ rpm-build: ## Build the RPM inside docker container
 	docker run --rm -i \
         --tmpfs /tmp:rw,exec \
         --mount type=bind,src="$(CWD)",dst="$(WORK_DIR)" \
-        $(APP_NAME) make rpm-build-local
+        $(APP_NAME) make rpm-build-local \
+        PACKAGE_RELEASE="$(PACKAGE_RELEASE)" \
+        HAPROXY_VERSION="$(HAPROXY_VERSION)" \
+        AWS_LC_VERSION="$(AWS_LC_VERSION)"
 
 rpm-build-local: fetch-sources ## Build the RPM locally
 	rpmbuild -ba \
 		--define "_tmppath /tmp" \
 		--define "_builddir /tmp/BUILD" \
 		--define "_buildrootdir /tmp/BUILDROOT " \
+		--define "package_release $(PACKAGE_RELEASE)" \
 		--define "haproxy_version $(HAPROXY_VERSION)" \
 		--define "aws_lc_version $(AWS_LC_VERSION)" \
 		SPECS/haproxy.spec

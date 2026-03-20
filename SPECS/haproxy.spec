@@ -3,14 +3,17 @@
 %define haproxy_homedir %{_localstatedir}/lib/haproxy
 %define haproxy_confdir %{_sysconfdir}/haproxy
 %define haproxy_datadir %{_datadir}/haproxy
+
+# Keep the leading packaging release monotonic while Version remains fixed.
+%global packaging_release %{!?package_release:1}%{?package_release}
  
 %global _hardened_build 1
 %global debug_package   %{nil}
  
 Name:           haproxy-quic
 Version:        %{haproxy_version}
-Release:        1%{?dist}
-Summary:        HAProxy reverse proxy for high availability environments
+Release:        %{packaging_release}.aws_lc.%{aws_lc_version}%{?dist}
+Summary:        HAProxy with HTTP/3 (QUIC) support via AWS-LC
  
 License:        GPLv2+
  
@@ -48,6 +51,7 @@ Requires(pre):  shadow-utils
 
 # Package replacement directives
 Provides:       haproxy = %{version}-%{release}
+Provides:       bundled(aws-lc) = %{aws_lc_version}
 Conflicts:      haproxy
 Obsoletes:      haproxy < %{version}
  
