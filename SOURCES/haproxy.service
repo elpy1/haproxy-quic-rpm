@@ -4,11 +4,11 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-EnvironmentFile=-/etc/default/haproxy
 EnvironmentFile=-/etc/sysconfig/haproxy
-Environment="CONFIG=/etc/haproxy/haproxy.cfg" "PIDFILE=/run/haproxy.pid" "EXTRAOPTS=-S /run/haproxy-master.sock"
-ExecStart=/usr/sbin/haproxy -Ws -f $CONFIG -p $PIDFILE $EXTRAOPTS
-ExecReload=/usr/sbin/haproxy -Ws -f $CONFIG -c $EXTRAOPTS
+Environment="CONFIG=/etc/haproxy/haproxy.cfg" "CONFIGDIR=/etc/haproxy/conf.d" "PIDFILE=/run/haproxy.pid" "EXTRAOPTS=-S /run/haproxy-master.sock"
+ExecStartPre=/usr/sbin/haproxy -Ws -f $CONFIG -f $CONFIGDIR -c -q $EXTRAOPTS
+ExecStart=/usr/sbin/haproxy -Ws -f $CONFIG -f $CONFIGDIR -p $PIDFILE $EXTRAOPTS
+ExecReload=/usr/sbin/haproxy -Ws -f $CONFIG -f $CONFIGDIR -c -q $EXTRAOPTS
 ExecReload=/bin/kill -USR2 $MAINPID
 KillMode=mixed
 Restart=always

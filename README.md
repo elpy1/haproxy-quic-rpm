@@ -104,11 +104,15 @@ Running on: Linux 5.14.0-611.16.1.el9_7.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Dec 22
 ```
 To enable and start the systemd service:
 ```
-systemctl start --now haproxy
+systemctl enable --now haproxy
 ```
 To check the service status:
 ```
 systemctl status haproxy
+```
+To inspect HAProxy logs from the packaged systemd service:
+```
+journalctl -u haproxy -e
 ```
 To confirm you can access haproxy stats locally:
 ```
@@ -116,6 +120,8 @@ curl localhost:9000/stats
 ```
 
 ### Configuring haproxy
+The packaged service validates `/etc/haproxy/haproxy.cfg` plus any `*.cfg` snippets in `/etc/haproxy/conf.d/` on start and reload.
+
 To enable HTTP/3, update `/etc/haproxy/haproxy.cfg`:
 ```
 frontend default-https

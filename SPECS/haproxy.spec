@@ -21,10 +21,9 @@ URL:            http://www.haproxy.org
 Source0:        haproxy-%{version}.tar.gz
 Source1:        haproxy.service
 Source2:        haproxy.cfg
-Source3:        haproxy.logrotate
-Source4:        haproxy.sysconfig
-Source5:        haproxy.sysusers
-Source6:        halog.1
+Source3:        haproxy.sysconfig
+Source4:        haproxy.sysusers
+Source5:        halog.1
  
 Source100:      aws-lc-%{aws_lc_version}.tar.gz
 
@@ -39,7 +38,6 @@ BuildRequires:  libasan
 # HAPROXY
 BuildRequires:  make
 BuildRequires:  gcc
-BuildRequires:  systemd-devel
 BuildRequires:  systemd
 BuildRequires:  systemd-rpm-macros
 BuildRequires:  lua-devel
@@ -88,7 +86,7 @@ ninja install
 popd
 
 # HAPROXY
-%{__make} %{?_smp_mflags} CPU="generic" TARGET="linux-glibc" USE_TFO=1 USE_LINUX_TPROXY=1 USE_SYSTEMD=1 USE_GETADDRINFO=1 USE_PROMEX=1 USE_LUA=1 USE_PCRE2=1 USE_PCRE2_JIT=1 USE_OPENSSL_AWSLC=1 USE_QUIC=1 USE_ZLIB=1 SSL_INC=%{_tmppath}/include SSL_LIB=%{_tmppath}/lib64 all
+%{__make} %{?_smp_mflags} CPU="generic" TARGET="linux-glibc" USE_TFO=1 USE_LINUX_TPROXY=1 USE_GETADDRINFO=1 USE_PROMEX=1 USE_LUA=1 USE_PCRE2=1 USE_PCRE2_JIT=1 USE_OPENSSL_AWSLC=1 USE_QUIC=1 USE_ZLIB=1 SSL_INC=%{_tmppath}/include SSL_LIB=%{_tmppath}/lib64 all
  
 %{__make} admin/halog/halog ADDINC="%{build_cflags}" ADDLIB="%{build_ldflags}"
 
@@ -102,10 +100,9 @@ popd
  
 %{__install} -p -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/haproxy.service
 %{__install} -p -D -m 0644 %{SOURCE2} %{buildroot}%{haproxy_confdir}/haproxy.cfg
-%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/haproxy
-%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/haproxy
-%{__install} -p -D -m 0644 %{SOURCE5} %{buildroot}%{_sysusersdir}/haproxy.conf
-%{__install} -p -D -m 0644 %{SOURCE6} %{buildroot}%{_mandir}/man1/halog.1
+%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/haproxy
+%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysusersdir}/haproxy.conf
+%{__install} -p -D -m 0644 %{SOURCE5} %{buildroot}%{_mandir}/man1/halog.1
 %{__install} -d -m 0755 %{buildroot}%{haproxy_homedir}
 %{__install} -d -m 0755 %{buildroot}%{haproxy_datadir}
 %{__install} -d -m 0755 %{buildroot}%{haproxy_confdir}/conf.d
@@ -152,7 +149,6 @@ done
 %dir %{haproxy_datadir}
 %{haproxy_datadir}/*
 %config(noreplace) %{haproxy_confdir}/haproxy.cfg
-%config(noreplace) %{_sysconfdir}/logrotate.d/haproxy
 %config(noreplace) %{_sysconfdir}/sysconfig/haproxy
 %{_unitdir}/haproxy.service
 %{_sbindir}/haproxy

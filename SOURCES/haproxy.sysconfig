@@ -1,4 +1,8 @@
-# Override systemd haproxy.service Environment variables used in ExecStart.
+# Override systemd haproxy.service environment variables.
 # Run "systemctl show -p Environment haproxy" to get default values.
-# Run "systemctl show -p ExecStart haproxy" to see how variables are used
-# in ExecStart command.
+# Run "systemctl show -p ExecStart haproxy" to see how variables are used.
+#
+# Example overrides:
+# CONFIG=/etc/haproxy/haproxy.cfg
+# CONFIGDIR=/etc/haproxy/conf.d
+# EXTRAOPTS=-S /run/haproxy-master.sock
