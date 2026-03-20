@@ -8,7 +8,6 @@
 %global packaging_release %{!?package_release:1}%{?package_release}
  
 %global _hardened_build 1
-%global debug_package   %{nil}
  
 Name:           haproxy-quic
 Version:        %{haproxy_version}
