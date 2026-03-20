@@ -84,7 +84,7 @@ fi
 # AWS LC
 pushd aws-lc-%{aws_lc_version}
 cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%{_tmppath} .
-ninja run_tests
+ninja
 ninja install
 popd
 
@@ -95,6 +95,11 @@ popd
 
 pushd admin/iprange
 %{__make} OPTIMIZE="%{build_cflags}" LDFLAGS="%{build_ldflags}"
+popd
+
+%check
+pushd aws-lc-%{aws_lc_version}
+ninja run_tests
 popd
  
 %install
