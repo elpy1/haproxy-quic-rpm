@@ -1,10 +1,15 @@
 # haproxy-quic-rpm
-Build RPM for haproxy 3.2 (LTS) with HTTP/3 support. Built, tested and actively running on Rocky Linux 9.
+RPM packaging for HAProxy 3.2 (LTS) with HTTP/3 support on RHEL9, built against AWS-LC.
 
 | Package name | Supported distributions | Includes |
 | --- | --- | --- |
 | haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 1.71.0 |
 
+## Project scope
+- This repository builds and publishes the `haproxy-quic` RPM for `el9` `x86_64`.
+- The package is intended as a drop-in replacement for distro `haproxy`, not a side-by-side install.
+- Public artifacts are currently distributed through GitHub Releases only.
+- Build and runtime validation are currently focused on Rocky Linux 9.
 
 ## Prerequisites
 - `docker`: Ensure Docker is installed and running.
@@ -35,23 +40,16 @@ Clean up and remove all artifacts from the build:
 make clean-all
 ```
 
-### GitHub Releases
-For now, public artifacts are distributed through GitHub Releases rather than a hosted DNF repository.
-
-Each release will include:
-- an `el9` `x86_64` binary RPM
-- the matching SRPM
-- a `SHA256SUMS` file for the attached assets
-
-Tags should use the form `v<HAPROXY_VERSION>-aws-lc-<AWS_LC_VERSION>`, for example `v3.2.15-aws-lc-1.71.0`.
-
-To build the exact bundle used by the release workflow locally:
-```bash
-make docker-build
-make release-bundle
+### Post-build
+After building, you should have the RPM and SRPM files saved locally in your repo:
 ```
-
-The resulting artifacts will be written to `release-artifacts/`.
+$ tree {,S}RPMS
+RPMS
+└── x86_64
+    └── haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9.x86_64.rpm
+SRPMS
+└── haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9.src.rpm
+```
 
 ### Help
 Run `make help` for more information:
@@ -80,21 +78,33 @@ Commands:
 ### Manual build
 The RPM build above relies on system packages for `lua` and `pcre2`. If you need to source these manually or want specific versions for a local build, you can use `scripts/manual_build.sh`. By default it picks up the repo's current haproxy and AWS-LC versions from `Makefile`. Be sure to check the build flags and edit as needed. 
 
-## Post-build
-After building, you should have the RPM and SRPM files saved locally in you repo:
+### GitHub Releases
+For now, public artifacts are distributed through GitHub Releases rather than a hosted DNF repository.
+
+Each release will include:
+- an `el9` `x86_64` binary RPM
+- the matching SRPM
+- a `SHA256SUMS` file for the attached assets
+
+Tags should use the form `v<HAPROXY_VERSION>-aws-lc-<AWS_LC_VERSION>`, for example `v3.2.15-aws-lc-1.71.0`.
+
+To build the exact bundle used by the release workflow locally:
+```bash
+make docker-build
+make release-bundle
 ```
-$ tree {,S}RPMS
-RPMS
-└── x86_64
-    └── haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9.x86_64.rpm
-SRPMS
-└── haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9.src.rpm
-```
-### Installation
-To install on a RHEL9 machine, use `dnf` to install the package from a local build or downloaded GitHub Release asset:
+
+The resulting artifacts will be written to `release-artifacts/`.
+
+
+## Installation
+Install on an `el9` host from a local build or a downloaded GitHub Release asset:
 ```
 dnf install /path/to/haproxy-quic-3.2.15-1.aws_lc.1.71.0.el9.x86_64.rpm
 ```
+
+The package `Conflicts` with and `Obsoletes` the distro `haproxy` package, so `dnf` will replace an existing `haproxy` install rather than attempt a side-by-side install.
+
 Verify `haproxy` installation (use `-vv` to display build information):
 ```
 $ haproxy -v
@@ -115,14 +125,15 @@ To inspect HAProxy logs from the packaged systemd service:
 ```
 journalctl -u haproxy -e
 ```
+
+The packaged service validates `/etc/haproxy/haproxy.cfg` plus any `*.cfg` snippets in `/etc/haproxy/conf.d/` on start and reload, and logs to journald by default.
+
 To confirm you can access haproxy stats locally:
 ```
 curl localhost:9000/stats
 ```
 
 ### Configuring haproxy
-The packaged service validates `/etc/haproxy/haproxy.cfg` plus any `*.cfg` snippets in `/etc/haproxy/conf.d/` on start and reload.
-
 To enable HTTP/3, update `/etc/haproxy/haproxy.cfg`:
 ```
 frontend default-https
