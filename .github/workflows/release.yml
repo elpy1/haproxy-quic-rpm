@@ -1,0 +1,74 @@
+name: draft github release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Capture release metadata
+        run: make --silent print-release-env > release.env
+
+      - name: Validate pushed tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          source release.env
+          if [[ "${GITHUB_REF_NAME}" != "${RELEASE_TAG}" ]]; then
+            printf 'Expected tag %s, got %s\n' "${RELEASE_TAG}" "${GITHUB_REF_NAME}" >&2
+            exit 1
+          fi
+
+      - name: Build builder image
+        run: make docker-build
+
+      - name: Build release bundle
+        run: make release-bundle
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-bundle-${{ github.ref_name }}
+          path: release-artifacts/
+
+      - name: Show GitHub CLI version
+        run: gh --version
+
+      - name: Create or update draft release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          source release.env
+          assets=(release-artifacts/*.rpm release-artifacts/SHA256SUMS)
+
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            is_draft=$(gh release view "${GITHUB_REF_NAME}" --json isDraft --jq '.isDraft')
+            if [[ "${is_draft}" != "true" ]]; then
+              printf 'Release %s already exists and is published; refusing to overwrite assets.\n' "${GITHUB_REF_NAME}" >&2
+              exit 1
+            fi
+
+            gh release upload "${GITHUB_REF_NAME}" "${assets[@]}" --clobber
+            gh release edit "${GITHUB_REF_NAME}" \
+              --title "${RELEASE_TITLE}" \
+              --notes-file release-artifacts/release-notes.md \
+              --draft
+          else
+            gh release create "${GITHUB_REF_NAME}" "${assets[@]}" \
+              --draft \
+              --verify-tag \
+              --title "${RELEASE_TITLE}" \
+              --notes-file release-artifacts/release-notes.md
+          fi

@@ -1,3 +1,6 @@
 SOURCES/*.tar.gz
 SOURCES/*.tgz
 internal*.md
+RPMS/
+SRPMS/
+release-artifacts/

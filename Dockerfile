@@ -1,6 +1,6 @@
 FROM rockylinux:9
 RUN set -x && \
-    dnf install -y sudo createrepo gcc make cmake \
+    dnf install -y sudo createrepo curl-minimal gcc gcc-c++ make cmake \
     rpm-build systemd-devel perl-core golang libasan \
     libtool pcre2-devel zlib-devel epel-release && \
     crb enable && \

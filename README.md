@@ -31,6 +31,24 @@ Clean up and remove all artifacts from the build:
 make clean-all
 ```
 
+### GitHub Releases
+For now, public artifacts are distributed through GitHub Releases rather than a hosted DNF repository.
+
+Each release will include:
+- an `el9` `x86_64` binary RPM
+- the matching SRPM
+- a `SHA256SUMS` file for the attached assets
+
+Tags should use the form `v<HAPROXY_VERSION>-aws-lc-<AWS_LC_VERSION>`, for example `v3.2.15-aws-lc-1.71.0`.
+
+To build the exact bundle used by the release workflow locally:
+```bash
+make docker-build
+make release-bundle
+```
+
+The resulting artifacts will be written to `release-artifacts/`.
+
 ### Help
 Run `make help` for more information:
 ```bash
@@ -45,9 +63,12 @@ Commands:
   fetch-sources    Fetch sources required for the RPM build
   rpm-build        Build the RPM inside docker container
   rpm-build-local  Build the RPM locally
+  release-bundle   Build RPM/SRPM assets and assemble a GitHub Release bundle
   clean-rpm        Clean all previously built RPMs and SRPMs
   clean-sources    Clean all previously downloaded RPM source files
+  clean-release    Clean generated GitHub Release bundle assets
   clean-all        Clean all the things
+  print-release-env Print release metadata as shell assignments
   help             Display this help
 ```
 
@@ -65,7 +86,7 @@ SRPMS
 └── haproxy-quic-3.2.15-1.el9.src.rpm
 ```
 ### Installation
-To install on a RHEL9 machine, use `dnf` to install the package:
+To install on a RHEL9 machine, use `dnf` to install the package from a local build or downloaded GitHub Release asset:
 ```
 dnf install /path/to/haproxy-quic-3.2.15-1.el9.x86_64.rpm
 ```
@@ -120,3 +141,5 @@ To reload haproxy configuration:
 ```
 systemctl reload haproxy
 ```
+
+Release workflow details are documented in `RELEASING.md`.
