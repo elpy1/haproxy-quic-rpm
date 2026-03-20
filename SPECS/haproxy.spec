@@ -130,7 +130,7 @@ done
  
 find ./examples/* -type f ! -name "*.cfg" -exec %{__rm} -f "{}" \;
  
-for textfile in $(find ./ -type f -name '*.txt')
+for textfile in $(find ./doc -type f -name '*.txt')
 do
     %{__mv} $textfile $textfile.old
     iconv --from-code ISO8859-1 --to-code UTF-8 --output $textfile $textfile.old
