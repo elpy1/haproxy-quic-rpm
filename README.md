@@ -143,8 +143,8 @@ backend default-http
     balance     roundrobin
 
     # Backend servers
-    server  app1 127.0.0.1:5001 check
-    server  app2 127.0.0.1:5002 check
+    server  app1 127.0.0.1:5001
+    server  app2 127.0.0.1:5002
 ```
 **NOTE**: Remember to update your firewall to allow UDP traffic on port 443!!
 
