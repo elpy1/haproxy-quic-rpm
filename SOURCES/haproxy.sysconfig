@@ -5,4 +5,5 @@
 # Example overrides:
 # CONFIG=/etc/haproxy/haproxy.cfg
 # CONFIGDIR=/etc/haproxy/conf.d
+# PIDFILE=/run/haproxy.pid
 # EXTRAOPTS=-S /run/haproxy-master.sock

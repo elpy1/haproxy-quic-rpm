@@ -127,10 +127,16 @@ journalctl -u haproxy -e
 ```
 
 The packaged service validates `/etc/haproxy/haproxy.cfg` plus any `*.cfg` snippets in `/etc/haproxy/conf.d/` on start and reload, and logs to journald by default.
+The installed default configuration exposes only a local stats page plus an admin socket; add your real frontends and backends in `/etc/haproxy/haproxy.cfg` or `/etc/haproxy/conf.d/*.cfg`.
 
 To confirm you can access haproxy stats locally:
 ```
 curl localhost:9000/stats
+```
+
+To inspect the packaged admin socket:
+```
+echo "show info" | socat - UNIX-CONNECT:/run/haproxy/admin.sock
 ```
 
 ### Configuring haproxy
@@ -157,6 +163,8 @@ backend default-http
     server  app1 127.0.0.1:5001
     server  app2 127.0.0.1:5002
 ```
+For explicit TLS cipher and protocol policy, set it in your own frontend/backend configuration rather than relying on the packaged baseline. The [Mozilla SSL Configuration Generator](https://ssl-config.mozilla.org/) is a good starting point for haproxy-specific TLS settings, but you should validate the result against client-compatibility.
+
 **NOTE**: Remember to update your firewall to allow UDP traffic on port 443!!
 
 To reload haproxy configuration:
