@@ -1,0 +1,14 @@
+# Rotate the conventional dedicated HAProxy log file when an external syslog
+# daemon is configured to write there. The packaged default remains journald.
+/var/log/haproxy.log {
+    daily
+    rotate 10
+    missingok
+    notifempty
+    compress
+    sharedscripts
+    postrotate
+        /bin/kill -HUP `cat /var/run/syslogd.pid 2> /dev/null` 2> /dev/null || true
+        /bin/kill -HUP `cat /var/run/rsyslogd.pid 2> /dev/null` 2> /dev/null || true
+    endscript
+}

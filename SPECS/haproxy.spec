@@ -22,9 +22,10 @@ URL:            http://www.haproxy.org
 Source0:        haproxy-%{version}.tar.gz
 Source1:        haproxy.service
 Source2:        haproxy.cfg
-Source3:        haproxy.sysconfig
-Source4:        haproxy.sysusers
-Source5:        halog.1
+Source3:        haproxy.logrotate
+Source4:        haproxy.sysconfig
+Source5:        haproxy.sysusers
+Source6:        halog.1
  
 Source100:      aws-lc-%{aws_lc_version}.tar.gz
 
@@ -107,9 +108,10 @@ popd
  
 %{__install} -p -D -m 0644 %{SOURCE1} %{buildroot}%{_unitdir}/haproxy.service
 %{__install} -p -D -m 0644 %{SOURCE2} %{buildroot}%{haproxy_confdir}/haproxy.cfg
-%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/sysconfig/haproxy
-%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysusersdir}/haproxy.conf
-%{__install} -p -D -m 0644 %{SOURCE5} %{buildroot}%{_mandir}/man1/halog.1
+%{__install} -p -D -m 0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/logrotate.d/haproxy
+%{__install} -p -D -m 0644 %{SOURCE4} %{buildroot}%{_sysconfdir}/sysconfig/haproxy
+%{__install} -p -D -m 0644 %{SOURCE5} %{buildroot}%{_sysusersdir}/haproxy.conf
+%{__install} -p -D -m 0644 %{SOURCE6} %{buildroot}%{_mandir}/man1/halog.1
 %{__install} -d -m 0755 %{buildroot}%{_licensedir}/%{name}
 %{__install} -p -m 0644 ./aws-lc-%{aws_lc_version}/LICENSE %{buildroot}%{_licensedir}/%{name}/AWS-LC-LICENSE
 %{__install} -p -m 0644 ./aws-lc-%{aws_lc_version}/NOTICE %{buildroot}%{_licensedir}/%{name}/AWS-LC-NOTICE
@@ -138,7 +140,7 @@ do
 done
  
 %pre
-%sysusers_create_compat %{SOURCE4}
+%sysusers_create_compat %{SOURCE5}
  
 %post
 %systemd_post haproxy.service
@@ -161,6 +163,7 @@ done
 %dir %{haproxy_datadir}
 %{haproxy_datadir}/*
 %config(noreplace) %{haproxy_confdir}/haproxy.cfg
+%config(noreplace) %{_sysconfdir}/logrotate.d/haproxy
 %config(noreplace) %{_sysconfdir}/sysconfig/haproxy
 %{_unitdir}/haproxy.service
 %{_sbindir}/haproxy

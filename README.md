@@ -127,6 +127,7 @@ journalctl -u haproxy -e
 ```
 
 The packaged service validates `/etc/haproxy/haproxy.cfg` plus any `*.cfg` snippets in `/etc/haproxy/conf.d/` on start and reload, and logs to journald by default.
+If you route haproxy logs to the conventional `/var/log/haproxy.log` path via rsyslog or another syslog daemon, the package also ships `/etc/logrotate.d/haproxy` for that path. Non-default log file paths remain user-managed.
 The installed default configuration exposes only a local stats page plus an admin socket; add your real frontends and backends in `/etc/haproxy/haproxy.cfg` or `/etc/haproxy/conf.d/*.cfg`.
 
 To confirm you can access haproxy stats locally:
