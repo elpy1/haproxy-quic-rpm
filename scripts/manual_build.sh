@@ -19,6 +19,7 @@ make_release_var() {
 
 AWS_LC_VERSION=${AWS_LC_VERSION:-$(make_release_var AWS_LC_VERSION)}
 HAPROXY_VERSION=${HAPROXY_VERSION:-$(make_release_var HAPROXY_VERSION)}
+AWS_LC_SSL_RUNNER_WORKERS=${AWS_LC_SSL_RUNNER_WORKERS:-$(make_release_var AWS_LC_SSL_RUNNER_WORKERS)}
 LUA_VERSION=${LUA_VERSION:-5.4.7}
 PCRE2_VERSION=${PCRE2_VERSION:-10.44}
 
@@ -101,7 +102,9 @@ build_aws_lc () {
         "${BUILD_TMPDIR}/aws-lc-${AWS_LC_VERSION}"
       (
          cd "${BUILD_TMPDIR}/aws-lc-${AWS_LC_VERSION}/"
-         cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${BUILD_TMPDIR}" .
+         AWS_LC_SSL_RUNNER_IDLE_TIMEOUT=120s \
+         AWS_LC_SSL_RUNNER_RETRY_ON_TIMEOUT=1 \
+         cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="${BUILD_TMPDIR}" -DRUNNER_ARGS="-num-workers;${AWS_LC_SSL_RUNNER_WORKERS}" .
          ninja run_tests
          ninja install
       )

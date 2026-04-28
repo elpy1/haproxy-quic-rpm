@@ -3,12 +3,13 @@ CWD := $(realpath $(shell dirname $(firstword $(MAKEFILE_LIST))))
 HOST_UID ?= $(shell id -u)
 HOST_GID ?= $(shell id -g)
 
-PACKAGE_RELEASE ?= 1
+PACKAGE_RELEASE ?= 2
 PACKAGE_NAME ?= haproxy-quic
 SUPPORTED_DISTRO ?= el9
 SUPPORTED_ARCH ?= x86_64
-AWS_LC_VERSION ?= 1.72.0
+AWS_LC_VERSION ?= 1.72.1
 HAPROXY_VERSION ?= 3.2.16
+AWS_LC_SSL_RUNNER_WORKERS ?= 4
 RELEASE_TAG ?= v$(HAPROXY_VERSION)-aws-lc-$(AWS_LC_VERSION)
 RELEASE_TITLE ?= HAProxy QUIC $(SUPPORTED_DISTRO) - $(HAPROXY_VERSION) / AWS-LC $(AWS_LC_VERSION)
 RELEASE_DIR ?= $(CWD)/release-artifacts
@@ -17,7 +18,7 @@ SOURCES_DIR = $(CWD)/SOURCES
 APP_NAME = el9builder
 WORK_DIR = /home/builder/rpmbuild
 
-export PACKAGE_RELEASE AWS_LC_VERSION HAPROXY_VERSION SOURCES_DIR
+export PACKAGE_RELEASE AWS_LC_VERSION HAPROXY_VERSION AWS_LC_SSL_RUNNER_WORKERS SOURCES_DIR
 
 docker-build: ## Build the docker container (required for building the RPM)
 	docker build \
@@ -50,7 +51,8 @@ rpm-build: ## Build the RPM inside docker container
         $(APP_NAME) make rpm-build-local \
         PACKAGE_RELEASE="$(PACKAGE_RELEASE)" \
         HAPROXY_VERSION="$(HAPROXY_VERSION)" \
-        AWS_LC_VERSION="$(AWS_LC_VERSION)"
+        AWS_LC_VERSION="$(AWS_LC_VERSION)" \
+        AWS_LC_SSL_RUNNER_WORKERS="$(AWS_LC_SSL_RUNNER_WORKERS)"
 
 rpm-build-local: fetch-sources ## Build the RPM locally
 	rpmbuild -ba \
@@ -60,6 +62,7 @@ rpm-build-local: fetch-sources ## Build the RPM locally
 		--define "package_release $(PACKAGE_RELEASE)" \
 		--define "haproxy_version $(HAPROXY_VERSION)" \
 		--define "aws_lc_version $(AWS_LC_VERSION)" \
+		--define "aws_lc_ssl_runner_workers $(AWS_LC_SSL_RUNNER_WORKERS)" \
 		SPECS/haproxy.spec
 
 release-bundle: rpm-build ## Build RPM/SRPM assets and assemble a GitHub Release bundle
@@ -83,6 +86,7 @@ print-release-env: ## Print release metadata as shell assignments
 	@printf "SUPPORTED_ARCH='%s'\n" "$(SUPPORTED_ARCH)"
 	@printf "HAPROXY_VERSION='%s'\n" "$(HAPROXY_VERSION)"
 	@printf "AWS_LC_VERSION='%s'\n" "$(AWS_LC_VERSION)"
+	@printf "AWS_LC_SSL_RUNNER_WORKERS='%s'\n" "$(AWS_LC_SSL_RUNNER_WORKERS)"
 	@printf "RELEASE_TAG='%s'\n" "$(RELEASE_TAG)"
 	@printf "RELEASE_TITLE='%s'\n" "$(RELEASE_TITLE)"
 	@printf "RELEASE_DIR='%s'\n" "$(RELEASE_DIR)"

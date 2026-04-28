@@ -6,6 +6,7 @@
 
 # Keep the leading packaging release monotonic while Version remains fixed.
 %global packaging_release %{!?package_release:1}%{?package_release}
+%global aws_lc_ssl_runner_workers %{!?aws_lc_ssl_runner_workers:4}%{?aws_lc_ssl_runner_workers}
  
 %global _hardened_build 1
  
@@ -83,7 +84,9 @@ fi
 %build
 # AWS LC
 pushd aws-lc-%{aws_lc_version}
-cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%{_tmppath} .
+AWS_LC_SSL_RUNNER_IDLE_TIMEOUT=120s \
+AWS_LC_SSL_RUNNER_RETRY_ON_TIMEOUT=1 \
+cmake -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=%{_tmppath} -DRUNNER_ARGS="-num-workers;%{aws_lc_ssl_runner_workers}" .
 ninja
 ninja install
 popd
