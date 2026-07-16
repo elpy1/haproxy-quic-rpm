@@ -11,13 +11,21 @@ OUTPUT_DIR=${1:-"${RELEASE_DIR}"}
 rm -rf "${OUTPUT_DIR}"
 mkdir -p "${OUTPUT_DIR}"
 
-shopt -s nullglob
-rpm_files=(RPMS/x86_64/*.rpm SRPMS/*.rpm)
+rpm_nvr="${HAPROXY_VERSION}-${PACKAGE_RELEASE}.aws_lc.${AWS_LC_VERSION}.${SUPPORTED_DISTRO}"
+main_rpm="RPMS/${SUPPORTED_ARCH}/${PACKAGE_NAME}-${rpm_nvr}.${SUPPORTED_ARCH}.rpm"
+source_rpm="SRPMS/${PACKAGE_NAME}-${rpm_nvr}.src.rpm"
 
-if [ ${#rpm_files[@]} -eq 0 ]; then
-    printf 'No RPM artifacts found. Run make rpm-build first.\n' >&2
+if [[ ! -f "${main_rpm}" || ! -f "${source_rpm}" ]]; then
+    printf 'Missing expected RPM artifacts for %s-%s. Run make rpm-build first.\n' \
+        "${PACKAGE_NAME}" "${rpm_nvr}" >&2
     exit 1
 fi
+
+shopt -s nullglob
+subpackages=(
+    RPMS/"${SUPPORTED_ARCH}"/"${PACKAGE_NAME}"-*-"${rpm_nvr}.${SUPPORTED_ARCH}.rpm"
+)
+rpm_files=("${main_rpm}" "${subpackages[@]}" "${source_rpm}")
 
 cp -p "${rpm_files[@]}" "${OUTPUT_DIR}/"
 
