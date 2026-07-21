@@ -3,11 +3,11 @@ CWD := $(realpath $(shell dirname $(firstword $(MAKEFILE_LIST))))
 HOST_UID ?= $(shell id -u)
 HOST_GID ?= $(shell id -g)
 
-PACKAGE_RELEASE ?= 2
+PACKAGE_RELEASE ?= 3
 PACKAGE_NAME ?= haproxy-quic
 SUPPORTED_DISTRO ?= el9
 SUPPORTED_ARCH ?= x86_64
-AWS_LC_VERSION ?= 5.2.0
+AWS_LC_VERSION ?= 5.3.0
 HAPROXY_VERSION ?= 3.2.21
 AWS_LC_SSL_RUNNER_WORKERS ?= 4
 RELEASE_TAG ?= v$(HAPROXY_VERSION)-aws-lc-$(AWS_LC_VERSION)
