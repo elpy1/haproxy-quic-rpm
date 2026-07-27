@@ -3,7 +3,7 @@ RPM packaging for HAProxy 3.2 (LTS) with HTTP/3 support on RHEL9, built against 
 
 | Package name | Supported distributions | Includes |
 | --- | --- | --- |
-| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 5.3.0 |
+| haproxy-quic | el9 | [AWS-LC](https://github.com/aws/aws-lc) 5.4.0 |
 
 ## Project scope
 - This repository builds and publishes the `haproxy-quic` RPM for `el9` `x86_64`.
@@ -28,11 +28,11 @@ make rpm-build
 ```
 or, if you wish to specify a different version of `haproxy` or `AWS-LC` (use `make check-latest` to compare the pinned haproxy/AWS-LC versions with upstream latest releases):
 ```bash
-make rpm-build HAPROXY_VERSION=3.2.21 AWS_LC_VERSION=5.3.0
+make rpm-build HAPROXY_VERSION=3.2.21 AWS_LC_VERSION=5.4.0
 ```
 If you need to rebuild the same `haproxy` version for a new `AWS-LC` bundle or a packaging-only change, increment `PACKAGE_RELEASE`:
 ```bash
-make rpm-build HAPROXY_VERSION=3.2.21 AWS_LC_VERSION=5.3.0 PACKAGE_RELEASE=3
+make rpm-build HAPROXY_VERSION=3.2.21 AWS_LC_VERSION=5.4.0 PACKAGE_RELEASE=4
 ```
 
 AWS-LC's SSL test runner is limited to 4 workers by default during RPM checks. Override `AWS_LC_SSL_RUNNER_WORKERS` if a local builder needs a different value:
@@ -51,9 +51,9 @@ After building, you should have the RPM and SRPM files saved locally in your rep
 $ tree {,S}RPMS
 RPMS
 └── x86_64
-    └── haproxy-quic-3.2.21-3.aws_lc.5.3.0.el9.x86_64.rpm
+    └── haproxy-quic-3.2.21-4.aws_lc.5.4.0.el9.x86_64.rpm
 SRPMS
-└── haproxy-quic-3.2.21-3.aws_lc.5.3.0.el9.src.rpm
+└── haproxy-quic-3.2.21-4.aws_lc.5.4.0.el9.src.rpm
 ```
 
 ### Help
@@ -91,7 +91,7 @@ Each release will include:
 - the matching SRPM
 - a `SHA256SUMS` file for the attached assets
 
-Tags should use the form `v<HAPROXY_VERSION>-aws-lc-<AWS_LC_VERSION>`, for example `v3.2.21-aws-lc-5.3.0`.
+Tags should use the form `v<HAPROXY_VERSION>-aws-lc-<AWS_LC_VERSION>`, for example `v3.2.21-aws-lc-5.4.0`.
 
 To build the exact bundle used by the release workflow locally:
 ```bash
@@ -105,7 +105,7 @@ The resulting artifacts will be written to `release-artifacts/`.
 ## Installation
 Install on an `el9` host from a local build or a downloaded GitHub Release asset:
 ```
-dnf install /path/to/haproxy-quic-3.2.21-3.aws_lc.5.3.0.el9.x86_64.rpm
+dnf install /path/to/haproxy-quic-3.2.21-4.aws_lc.5.4.0.el9.x86_64.rpm
 ```
 
 The package `Conflicts` with and `Obsoletes` the distro `haproxy` package, so `dnf` will replace an existing `haproxy` install rather than attempt a side-by-side install.
@@ -198,5 +198,6 @@ Examples:
 - `haproxy-quic-3.2.21-1.aws_lc.5.1.0.el9`
 - `haproxy-quic-3.2.21-2.aws_lc.5.2.0.el9`
 - `haproxy-quic-3.2.21-3.aws_lc.5.3.0.el9`
+- `haproxy-quic-3.2.21-4.aws_lc.5.4.0.el9`
 
 While `HAPROXY_VERSION` stays the same, the leading `PACKAGE_RELEASE` value must keep increasing.
