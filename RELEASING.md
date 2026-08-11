@@ -39,19 +39,20 @@ under `release-artifacts/`.
 ## Publishing a draft GitHub Release
 
 1. Update `HAPROXY_VERSION` and `AWS_LC_VERSION` in `Makefile` if needed.
-2. Run a local dry run with `make docker-build` and `make release-bundle`.
-3. Load the release metadata from `Makefile`:
+2. Reset `PACKAGE_RELEASE` to `1` when `HAPROXY_VERSION` changes. If HAProxy stays at the same version, increment `PACKAGE_RELEASE` for each AWS-LC or packaging update.
+3. Run a local dry run with `make docker-build` and `make release-bundle`.
+4. Load the release metadata from `Makefile`:
 
 ```bash
 eval "$(make --silent print-release-env)"
 ```
 
-4. Create and push an annotated tag:
+5. Create and push an annotated tag:
 
 ```bash
 git tag -a "${RELEASE_TAG}" -m "${RELEASE_TITLE}"
 git push origin "${RELEASE_TAG}"
 ```
 
-5. GitHub Actions will build the RPM/SRPM assets, attach `SHA256SUMS`, and create or update a draft GitHub Release for that tag.
-6. Review the draft release in GitHub, then publish it manually when satisfied.
+6. GitHub Actions will build the RPM/SRPM assets, attach `SHA256SUMS`, and create or update a draft GitHub Release for that tag.
+7. Review the draft release in GitHub, then publish it manually when satisfied.
