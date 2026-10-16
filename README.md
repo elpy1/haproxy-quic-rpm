@@ -28,11 +28,11 @@ make rpm-build
 ```
 or, if you wish to specify a different version of `haproxy` or `AWS-LC` (use `make check-latest` to compare the pinned haproxy/AWS-LC versions with upstream latest releases):
 ```bash
-make rpm-build HAPROXY_VERSION=3.2.25 AWS_LC_VERSION=5.11.0
+make rpm-build HAPROXY_VERSION=3.2.26 AWS_LC_VERSION=5.11.0
 ```
 If you need to rebuild the same `haproxy` version for a new `AWS-LC` bundle or a packaging-only change, increment `PACKAGE_RELEASE`:
 ```bash
-make rpm-build HAPROXY_VERSION=3.2.25 AWS_LC_VERSION=5.11.0 PACKAGE_RELEASE=3
+make rpm-build HAPROXY_VERSION=3.2.26 AWS_LC_VERSION=5.11.0 PACKAGE_RELEASE=2
 ```
 
 AWS-LC's SSL test runner is limited to 4 workers by default during RPM checks. Override `AWS_LC_SSL_RUNNER_WORKERS` if a local builder needs a different value:
@@ -51,11 +51,11 @@ After building, you should have the RPM and SRPM files saved locally in your rep
 $ tree {,S}RPMS
 RPMS
 └── x86_64
-    ├── haproxy-quic-3.2.25-2.aws_lc.5.11.0.el9.x86_64.rpm
-    ├── haproxy-quic-debuginfo-3.2.25-2.aws_lc.5.11.0.el9.x86_64.rpm
-    └── haproxy-quic-debugsource-3.2.25-2.aws_lc.5.11.0.el9.x86_64.rpm
+    ├── haproxy-quic-3.2.26-1.aws_lc.5.11.0.el9.x86_64.rpm
+    ├── haproxy-quic-debuginfo-3.2.26-1.aws_lc.5.11.0.el9.x86_64.rpm
+    └── haproxy-quic-debugsource-3.2.26-1.aws_lc.5.11.0.el9.x86_64.rpm
 SRPMS
-└── haproxy-quic-3.2.25-2.aws_lc.5.11.0.el9.src.rpm
+└── haproxy-quic-3.2.26-1.aws_lc.5.11.0.el9.src.rpm
 ```
 
 ### Help
@@ -94,7 +94,7 @@ Each release will include:
 - the matching SRPM
 - a `SHA256SUMS` file for the attached assets
 
-Tags should use the form `v<HAPROXY_VERSION>-aws-lc-<AWS_LC_VERSION>`, for example `v3.2.25-aws-lc-5.11.0`.
+Tags should use the form `v<HAPROXY_VERSION>-aws-lc-<AWS_LC_VERSION>`, for example `v3.2.26-aws-lc-5.11.0`.
 
 To build the exact bundle used by the release workflow locally:
 ```bash
@@ -108,7 +108,7 @@ The resulting artifacts will be written to `release-artifacts/`.
 ## Installation
 Install on an `el9` host from a local build or a downloaded GitHub Release asset:
 ```
-dnf install /path/to/haproxy-quic-3.2.25-2.aws_lc.5.11.0.el9.x86_64.rpm
+dnf install /path/to/haproxy-quic-3.2.26-1.aws_lc.5.11.0.el9.x86_64.rpm
 ```
 
 The package `Conflicts` with and `Obsoletes` the distro `haproxy` package, so `dnf` will replace an existing `haproxy` install rather than attempt a side-by-side install.
@@ -116,9 +116,9 @@ The package `Conflicts` with and `Obsoletes` the distro `haproxy` package, so `d
 Verify `haproxy` installation (use `-vv` to display build information):
 ```
 $ haproxy -v
-HAProxy version 3.2.25-70469d3 2026/09/28 - https://haproxy.org/
+HAProxy version 3.2.26-3e0f11a 2026/10/14 - https://haproxy.org/
 Status: long-term supported branch - will stop receiving fixes around Q2 2030.
-Known bugs: http://www.haproxy.org/bugs/bugs-3.2.25.html
+Known bugs: http://www.haproxy.org/bugs/bugs-3.2.26.html
 Running on: Linux 7.2.7-200.fc44.x86_64 #1 SMP PREEMPT_DYNAMIC Mon Sep 21 18:25:57 UTC 2026 x86_64
 ```
 To enable and start the systemd service:
@@ -207,5 +207,6 @@ Examples:
 - `haproxy-quic-3.2.23-2.aws_lc.5.9.0.el9`
 - `haproxy-quic-3.2.25-1.aws_lc.5.10.0.el9`
 - `haproxy-quic-3.2.25-2.aws_lc.5.11.0.el9`
+- `haproxy-quic-3.2.26-1.aws_lc.5.11.0.el9`
 
 Reset `PACKAGE_RELEASE` to `1` when `HAPROXY_VERSION` changes. While `HAPROXY_VERSION` stays the same, the leading `PACKAGE_RELEASE` value must keep increasing.
